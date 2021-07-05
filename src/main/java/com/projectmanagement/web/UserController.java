@@ -3,6 +3,7 @@ package com.projectmanagement.web;
 import com.projectmanagement.domain.User;
 import com.projectmanagement.services.MapValidationErrorService;
 import com.projectmanagement.services.UserService;
+import com.projectmanagement.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,19 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserValidator userValidator;
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result){
-        //validate password
-        ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
-        if(errorMap != null) return errorMap;
+        // Validate passwords match
+        userValidator.validate(user,result);
 
-        User newUser= userService.saveUser(user);
-        return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
+        ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService(result);
+        if(errorMap != null)return errorMap;
+
+        User newUser = userService.saveUser(user);
+
+        return  new ResponseEntity<User>(newUser, HttpStatus.CREATED);
     }
 }
