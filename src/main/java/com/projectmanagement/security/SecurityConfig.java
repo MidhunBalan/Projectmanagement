@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+import static com.projectmanagement.security.SecurityConstants.SIGN_UP_URLS;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
@@ -16,8 +18,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
         prePostEnabled = true
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
        http.cors().and().csrf().disable()
@@ -41,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                        "/**/*.css",
                        "/**/*.js"
                ).permitAll()
-               .antMatchers("/api/users/**").permitAll()
+               .antMatchers(SIGN_UP_URLS).permitAll()
                .anyRequest().authenticated();
 
     }
