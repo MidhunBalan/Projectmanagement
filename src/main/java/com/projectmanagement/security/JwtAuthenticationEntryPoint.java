@@ -15,13 +15,14 @@ import java.io.IOException;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+                         AuthenticationException e) throws IOException, ServletException {
+
         InvalidLoginResponse loginResponse = new InvalidLoginResponse();
         String jsonLoginResponse = new Gson().toJson(loginResponse);
 
-        response.setContentType("application/json");
-        response.setStatus(401);
-        response.getWriter().print(jsonLoginResponse);
+        httpServletResponse.setContentType("application/json");
+        httpServletResponse.setStatus(401);
+        httpServletResponse.getWriter().print(jsonLoginResponse);
     }
 }
